@@ -1,13 +1,15 @@
-export CUDA_VISIBLE_DEVICES=7
+export CUDA_VISIBLE_DEVICES=0
 D_ROOT_DIR="attack-log/"
 DETECTOR=ue
 MODEL=("bert") #generic name for models; Options: ("bert", "roberta")
-DATASET="sst2"   #Options: ("imdb" , "ag-news", "sst2")
-MODEL_DATASET="SST-2" #Change to "SST-2" for "sst2" only
-TARGET_MODEL=("textattack/bert-base-uncased-$MODEL_DATASET")
+DATASET="imdb"   #Options: ("imdb" , "ag-news", "sst2")
+#MODEL_DATASET="SST-2" #Change to "SST-2" for "sst2" only
+TARGET_MODEL=("textattack/bert-base-uncased-$DATASET")
+export CUDA_VISIBLE_DEVICES=0
 
-RECIPE="textfooler textfooler_high_confidence_0.9 bae bae_high_confidence_0.9 pruthi pruthi_high_confidence_0.9 textbugger textbugger_high_confidence_0.9" #Four attack options (No tf-adj for sst2 dataset)
-EXP_NAME="tmp" #name for experiment
+#RECIPE="textfooler textfooler_high_confidence_0.9 bae bae_high_confidence_0.9 pruthi pruthi_high_confidence_0.9 textbugger textbugger_high_confidence_0.9" #Four attack options (No tf-adj for sst2 dataset)
+RECIPE="textfooler"
+EXP_NAME="a2t_base" #name for experiment
 PARAM_PATH="params/reduce_dim_100.json" #Indicate model parameters (e.g. No PCA, linear PCA, MLE)
 SCEN="s1"  #Scenario (see paper for details); Options: ("s1" "s2")
 ESTIM="MCD"  #Options : ("None", "MCD")

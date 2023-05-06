@@ -1,7 +1,7 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=0
-DATASET="sst2"
-RECIPE="textfooler pwws bae"
+DATASET="imdb"
+#RECIPE="textfooler pwws bae"
 RECIPE="textfooler"
 MODEL="cnn-${DATASET} lstm-${DATASET}"
 #for recipe in $RECIPE

@@ -1,17 +1,10 @@
+import logging
+from typing import Dict
+
 import torch
 
-from collections import Counter
-from alpaca.uncertainty_estimator.masks import build_mask
-from typing import Iterable, Union, Dict
-
-
-import numpy as np
-import time
-import random
-
-import logging
-
 log = logging.getLogger(__name__)
+
 
 class DropoutMC(torch.nn.Module):
     def __init__(self, p: float, activate=False):
@@ -27,7 +20,7 @@ class DropoutMC(torch.nn.Module):
 
 
 def convert_to_mc_dropout(
-    model: torch.nn.Module, substitution_dict: Dict[str, torch.nn.Module] = None
+        model: torch.nn.Module, substitution_dict: Dict[str, torch.nn.Module] = None
 ):
     for i, layer in enumerate(list(model.children())):
         proba_field_name = "dropout_rate" if "flair" in str(type(layer)) else "p"
@@ -42,7 +35,7 @@ def convert_to_mc_dropout(
 
 
 def activate_mc_dropout(
-    model: torch.nn.Module, activate: bool, random: float = 0.0, verbose: bool = False
+        model: torch.nn.Module, activate: bool, random: float = 0.0, verbose: bool = False
 ):
     for layer in model.children():
         if isinstance(layer, DropoutMC):
@@ -56,24 +49,25 @@ def activate_mc_dropout(
                 model=layer, activate=activate, random=random, verbose=verbose
             )
 
+
 def convert_dropouts(model, dropout_type='MC'):
     if dropout_type == 'MC':
         dropout_ctor = lambda p, activate: DropoutMC(
             p=0.1, activate=False
-          )
+        )
     elif dropout_type == "DPP":
 
-      def dropout_ctor(p, activate):
-        return DropoutDPP(
-          p=p,
-          activate=activate,
-          max_n=100,
-          max_frac=0.8,
-          mask_name="dpp",
-        )
+        def dropout_ctor(p, activate):
+            return DropoutDPP(
+                p=p,
+                activate=activate,
+                max_n=100,
+                max_frac=0.8,
+                mask_name="dpp",
+            )
 
     else:
-      raise ValueError(f"Wrong dropout type: {ue_args.dropout_type}")
+        raise ValueError(f"Wrong dropout type: {ue_args.dropout_type}")
 
     # set_last_dropout(model, dropout_ctor(p=ue_args.inference_prob, activate=False))
     if dropout_type == "DPP":
